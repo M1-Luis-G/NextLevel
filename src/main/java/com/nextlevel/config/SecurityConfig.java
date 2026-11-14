@@ -22,6 +22,10 @@ import com.nextlevel.security.JwtAuthenticationFilter;
 import com.nextlevel.security.JwtCookieService;
 import com.nextlevel.security.OAuth2AuthenticationSuccessHandler;
 
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
 @Configuration
 public class SecurityConfig {
 
@@ -52,6 +56,7 @@ public class SecurityConfig {
             JwtCookieService jwtCookieService,
             OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) throws Exception {
         http.authenticationProvider(daoAuthenticationProvider)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -61,13 +66,21 @@ public class SecurityConfig {
                 .requestMatchers("/", "/login", "/registro", "/catalogo", "/producto/**", "/productos",
                         "/admin/login", "/auth/login", "/auth/logout", "/css/**", "/images/**", "/webjars/**",
                         "/403", "/404", "/error", "/error/**", "/carrito", "/carrito/**", "/pedido/detalle",
-                        "/pedido/continuar", "/ubicacion", "/auth/oauth2/google/**", "/oauth2/**", "/login/oauth2/**")
+                        "/pedido/continuar", "/ubicacion", "/auth/oauth2/google/**", "/oauth2/**", "/login/oauth2/**",
+                        "/pedido/continuar", "/ubicacion", "/auth/oauth2/google/**", "/oauth2/**", "/login/oauth2/**",
+                        "/api/tienda/**", "/api/productos/**")
                 .permitAll()
+                
                 .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/registro").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/auth/email-exists").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                
+                .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
+                
+                .requestMatchers("/api/cliente/**").hasRole("CLIENTE")
+                
                 .requestMatchers("/pedido/mis-pedidos", "/pedido/realizar", "/perfil/**").hasAnyRole("CLIENTE", "ADMIN")
                 .requestMatchers("/api/auth/me").hasAnyRole("CLIENTE", "ADMIN")
+                
                 .anyRequest().authenticated())
             .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
                 .usernameParameter("correo").passwordParameter("password")
@@ -100,6 +113,21 @@ public class SecurityConfig {
                 }))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+   @Bean 
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Permite peticiones desde la URL dinámica 
+        configuration.setAllowedOriginPatterns(List.of("*")); 
+        
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Aplica a todas las rutas
+        return source;
     }
 
     @Bean
