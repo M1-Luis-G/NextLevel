@@ -73,11 +73,8 @@ class _CatalogoViewState extends State<CatalogoView> {
             Text('Ayuda - Nextlevel Store'),
           ],
         ),
-        content: const Text(
-          '• En Inicio se cargan automáticamente los productos que caben en tu pantalla y más al bajar.\n'
-          '• En Indicadores puedes revisar el resumen del inventario.\n'
-          '• En Categoría puedes filtrar los productos por tipo.\n'
-          '• Usa el botón (+) en la esquina inferior derecha para registrar nuevos productos y subir imágenes desde tu PC.',
+        content: const Text(        
+          ' (+) ',
         ),
         actions: [
           FilledButton(
@@ -201,7 +198,7 @@ class _CatalogoViewState extends State<CatalogoView> {
                           keyboardType: TextInputType.number,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
-                            hintText: 'Stock disponible',
+                            hintText: 'Stock ',
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -237,7 +234,7 @@ class _CatalogoViewState extends State<CatalogoView> {
                           icon: const Icon(Icons.upload_file),
                           label: Text(
                             nombreArchivoSeleccionado ??
-                                'Subir imagen desde mi computadora',
+                                'imagen',
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -325,7 +322,7 @@ class _CatalogoViewState extends State<CatalogoView> {
                                     SnackBar(
                                       content: Text(
                                         exito
-                                            ? '¡Producto e imagen guardados en la base de datos!'
+                                            ? 'Producto guardados'
                                             : prodVM.errorMessage,
                                       ),
                                     ),
@@ -761,7 +758,7 @@ class _CatalogoViewState extends State<CatalogoView> {
               backgroundColor: Color(0xFF5C317A),
               child: Icon(Icons.attach_money, color: Colors.white),
             ),
-            title: const Text('Valor del Inventario Cargado'),
+            title: const Text('Valor del Inventario '),
             trailing: Text(
               '\$${valorInventario.toStringAsFixed(0)}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -781,7 +778,7 @@ class _CatalogoViewState extends State<CatalogoView> {
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            'Filtrar por Categoría',
+            'Categoría',
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
